@@ -1,0 +1,70 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <style>
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #e2e8f0;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px 16px;
+            text-align: left;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+
+        .table tr:hover {
+            background-color: #e2e8f0;
+        }
+    </style>
+
+    <h2>Остатки в складе</h2>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Название
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Количество
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Категория
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Цена
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for products in qty_stat %}
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ products.name }}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ products.qty }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ products.category }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ products.price }}$
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

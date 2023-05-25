@@ -1,0 +1,64 @@
+{% extends 'dashboard.html' %}
+
+
+{% block body %}
+    <div class="grid grid-cols-6 gap-1 px-24">
+        <div class="col-span-1">
+            <section class="pt-16">
+                <p class="text-2xl font-semibold">Цена</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="flex">
+                        <input type="text" name="from"
+                               class="w-1/2 h-10 mt-2 px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                               placeholder="от">
+                        <input type="text" name="to"
+                               class="w-1/2 h-10 mt-2 ml-2 px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                               placeholder="до">
+                    </div>
+                    <button type="submit" class="bg-blue-600 py-2 text-white rounded mt-2 w-full">Фильтр</button>
+                </form>
+                <div class="my-5">
+                    {% for category in categories %}
+                        {% if category.products.count != 0 %}
+                            <a class="text-3sm block text-gray-800 p-2 rounded hover:bg-gray-100 hover:text-blue-600 px-4 md:my-0"
+                               href="{% url 'dashboard' %}product/{{ category.id }}">{{ category.name }}</a>
+                        {% endif %}
+                        {% if category.children.count != 0 %}
+                            {% for child in category.children.all %}
+                                <a href="{% url 'dashboard' %}product/{{ child.id }}"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ child.name }}</a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="col-span-5">
+            <p class="text-2xl pt-8 pb-4 font-semibold-600 px-24">{{ category_name }}</p>
+            <hr class="mx-24">
+            <section class="text-gray-600 body-font px-24">
+                <div class="container py-16 mx-auto">
+                    <div class="flex flex-wrap -m-4">
+                        {% for product in products %}
+                            <div class="lg:w-1/4 md:w-1/2 max-w-xs transition duration-300 ease-in-out hover:shadow-lg p-8 rounded-xl">
+                                <a class="block relative h-48 rounded overflow-hidden" href="{{ product.id }}">
+                                    <img alt="ecommerce" class="object-cover object-center w-full h-full block"
+                                         src="{{ product.image.url }}">
+                                </a>
+                                <a href="{{ product.id }}">
+                                    <div class="mt-4">
+                                        <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{ product.category.name }}</h3>
+                                        <h2 class="text-gray-900 title-font text-lg font-medium">{{ product.name }}</h2>
+                                        <p class="mt-1">${{ product.price }}</p>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+{% endblock body %}

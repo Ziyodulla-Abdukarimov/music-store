@@ -1,0 +1,98 @@
+{% extends 'dashboard.html' %}
+{% block body %}
+
+    <section class="text-gray-600 px-24 body-font overflow-hidden">
+        <div class="container px-5 pt-8 mx-auto">
+            <div class="lg:w-4/5 mx-auto flex flex-wrap">
+                <img alt="ecommerce" class="lg:w-1/2 w-full lg:h-full object-cover object-center rounded"
+                     src="{{ product.image.url }}">
+                <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+                    <h2 class="text-sm title-font text-gray-500 tracking-widest">Имя бренда</h2>
+                    <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ product.name }}</h1>
+                    <div class="flex mb-4">
+
+                    </div>
+                    <p class="leading-relaxed">{{ product.description | safe }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="flex items-center mb-4">
+                            <button id="decrementBtn" type="button"
+                                    class="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-l">
+                                -
+                            </button>
+                            <input id="quantityInput" name="qty" type="number" class="border-gray-300 text-center w-20"
+                                   value="1">
+                            <button id="incrementBtn" type="button"
+                                    class="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-r">
+                                +
+                            </button>
+                        </div>
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Добавить в корзину
+                        </button>
+                    </form>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p {% if message.tags %} class="font-red-900" {% endif %}>{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <p class="px-24 text-2xl pt-8">Рекомендуется для вас ></p>
+    <section class="text-gray-600 body-font px-24">
+        <div class="container py-16 mx-auto">
+            <div class="flex flex-wrap -m-4">
+                {% for product in recommended %}
+                    <div class="lg:w-1/4 md:w-1/2 p-4 w-full transition duration-300 ease-in-out hover:shadow-lg p-8 rounded-xl">
+                        <a class="block relative h-48 rounded overflow-hidden" href="{{ product.id }}">
+                            <img alt="ecommerce" class="object-cover object-center w-full h-full block"
+                                 src="{{ product.image.url }}">
+                        </a>
+                        <div class="mt-4">
+                            <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{ product.category }}</h3>
+                            <h2 class="text-gray-900 title-font text-lg font-medium">{{ product.name }}</h2>
+                            <p class="mt-1">$ {{ product.price }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <script>
+        // Counter funktsiyasi
+        function updateCounter(increment) {
+            const quantityInput = document.getElementById('quantityInput');
+            let currentValue = parseInt(quantityInput.value);
+            let newValue = currentValue + increment;
+
+            // Kerakli limitlarni o'zgartirishingiz mumkin
+            const maxQuantity = 1000; // Maksimal mahsulot soni
+            const minQuantity = 1; // Minimal mahsulot soni
+
+            // Mahsulot sonini limitlar oraliqida saqlash
+            if (newValue > maxQuantity) {
+                newValue = maxQuantity;
+            } else if (newValue < minQuantity) {
+                newValue = minQuantity;
+            }
+
+            quantityInput.value = newValue;
+        }
+
+        // Minus tugmasi bosilganda
+        document.getElementById('decrementBtn').addEventListener('click', function () {
+            updateCounter(-1); // Mahsulot sonini 1 tag decrease qilish
+        });
+
+        // Plus tugmasi bosilganda
+        document.getElementById('incrementBtn').addEventListener('click', function () {
+            updateCounter(1); // Mahsulot sonini 1 tag increase qilish
+        });
+
+
+    </script>
+
+{% endblock body %}
