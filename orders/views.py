@@ -88,9 +88,14 @@ def checkout(request):
 
 
 def my_orders(request):
-    order = Order.objects.get(user=request.user)
-    context = {
-        'order': order,
-        'order_items': OrderItems.objects.filter(order=order),
-    }
+    try:
+        order = Order.objects.get(user=request.user)
+        context = {
+            'order': order,
+            'order_items': OrderItems.objects.filter(order=order),
+        }
+    except:
+        context = {
+
+        }
     return render(request, 'myorders.html', context)
