@@ -83,7 +83,7 @@ def checkout(request):
         return redirect('login')
 
     return render(request, 'checkout.html', {
-        "totalqty": CartItem.get_total_qty(),
+        "totalprice": CartItem.get_total_price(),
     })
 
 
